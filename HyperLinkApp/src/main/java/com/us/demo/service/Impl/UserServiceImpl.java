@@ -26,11 +26,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findUserByUsername(String username) {
         User user = userMapper.selUserByusername(username);
-        if(user != null)
-        {
+        if(user != null) {
             return user;
-        }else
-        {
+        }else {
             return null;
         }
     }
@@ -40,23 +38,18 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(rollbackFor = IllegalArgumentException.class)
     public User insUserAndRole(User user, int roleId) {
-        if(roleId >= 1&&roleId <= 3)
-        {
+        if(roleId >= 1&&roleId <= 3) {
             Role role = roleRepository.findOne(roleId);
-            if(user.getNickname() == null||user.getUsername() == null||user.getPassword() == null)
-            {
+            if(user.getNickname() == null||user.getUsername() == null||user.getPassword() == null) {
                 return null;
-            }else
-            {
+            }else {
                 User user1 = userRepository.findByUsername(user.getUsername());
-                if(user1 == null)
-                {
+                if(user1 == null) {
                     user.getRoles().add(role);
                     role.getUsers().add(user);
                     User user2 = userRepository.save(user);
                     return user2;
-                }else
-                {
+                }else {
                     return null;
                 }
 

@@ -33,17 +33,13 @@ public class TokenController {
         PrintWriter out = response.getWriter();
         User user = userRepository.findByUsername(username);
         System.out.println(username);
-        if(user == null)
-        {
+        if(user == null) {
             System.out.println("用户不存在");
-        }else
-        {
-            if(!(user.getPassword().equals(password)))
-            {
+        }else {
+            if(!(user.getPassword().equals(password))) {
                 System.out.println("密码不对");
             }
-            else
-            {
+            else {
 //                String token = tokenService.getToken(user);
 //
 //                System.out.println(user);

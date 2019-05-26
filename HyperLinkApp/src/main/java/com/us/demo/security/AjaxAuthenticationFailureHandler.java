@@ -19,6 +19,7 @@ public class AjaxAuthenticationFailureHandler implements AuthenticationFailureHa
     @Override
     public void onAuthenticationFailure(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException, ServletException {
         String str = gson.toJson(ApiResponse.ofStatus(ApiResponse.Status.LOGIN_ERR));
+        System.out.println(1);
         httpServletResponse.getWriter().write(str);
     }
 }

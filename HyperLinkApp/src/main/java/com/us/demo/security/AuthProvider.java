@@ -41,21 +41,18 @@ public class AuthProvider implements AuthenticationProvider {
          String password = (String) authentication.getCredentials();
          JwtUser jwtUser = (JwtUser) userDetailService.loadUserByUsername(username);
 
-        if (jwtUser == null)
-        {
+        if (jwtUser == null) {
             throw new AuthenticationCredentialsNotFoundException("not find user");
         }
 
         //密码验证  将用户信息存放在redis中
-        if (bCryptPasswordEncoder.matches(password,jwtUser.getPassword()))
-        {
-            String token = JwtUtil.createJwt(500 * 1000, jwtUser);
+        if (bCryptPasswordEncoder.matches(password,jwtUser.getPassword())) {
+            String token = JwtUtil.createJwt(3 * 24 * 60 * 60 * 1000, jwtUser);
             System.out.println("密码正确");
             //设置5000秒过期
-            stringRedisTemplate.opsForValue().set(jwtUser.getUsername(),token,5000, TimeUnit.SECONDS);
+            stringRedisTemplate.opsForValue().set(jwtUser.getUsername(),token,3, TimeUnit.DAYS);
             return new UsernamePasswordAuthenticationToken(jwtUser,null,jwtUser.getAuthorities());
-        }else
-        {
+        }else {
             throw new BadCredentialsException("password error");
         }
     }

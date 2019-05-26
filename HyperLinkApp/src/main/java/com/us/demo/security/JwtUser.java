@@ -11,8 +11,6 @@ import java.util.Collection;
 import java.util.List;
 
 public class JwtUser implements UserDetails {
-
-
     private int id;
     private String username;
     private String password;
@@ -20,15 +18,13 @@ public class JwtUser implements UserDetails {
 
     //写一个能直接使用user创建的JwtUser的构造器
     //并且将角色装配到 对应user之中
-    public JwtUser(User user)
-    {
+    public JwtUser(User user) {
         id = user.getId();
         username = user.getUsername();
         password = user.getPassword();
         List<Role> list = new ArrayList<>(user.getRoles());
         System.out.println(list);
-        for (Role role:list)
-        {
+        for (Role role:list) {
             authorities.add(new SimpleGrantedAuthority(role.getName()));
         }
     }

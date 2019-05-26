@@ -27,25 +27,21 @@ public class UserDetailService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
         logger.info("进入自定义认证协议");
-        if (s == null)
-        {
+        if (s == null) {
             return null;
         }
         User user1 = userRepository.findByUsername(s);
         User user2 = userRepository.findByEmail(s);
         //如果用户没找到
-        if(user1 != null)
-        {
+        if(user1 != null) {
             //添加用户权限
             JwtUser jwtUser = new JwtUser(user1);
             return  (UserDetails) jwtUser;
-        }else if(user2 != null)
-        {
+        }else if(user2 != null) {
             //添加用户权限
             JwtUser jwtUser = new JwtUser(user2);
             return  (UserDetails) jwtUser;
-        }else
-        {
+        }else {
             logger.info("没找到用户");
             return null;
         }

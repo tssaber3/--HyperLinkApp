@@ -34,8 +34,7 @@ public class AjaxAuthenticationSuccessHandler implements AuthenticationSuccessHa
         System.out.println("进入 登录成功拦截器");
         //获取当前用户 的UserDetail对象
         JwtUser jwtUser = (JwtUser) authentication.getPrincipal();
-        if (jwtUser == null)
-        {
+        if (jwtUser == null) {
             System.out.println(jwtUser + "is null");
         }
         User user = userService.findUserByUsername(jwtUser.getUsername());

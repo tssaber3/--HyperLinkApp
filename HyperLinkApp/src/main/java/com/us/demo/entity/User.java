@@ -58,6 +58,9 @@ public class User implements Serializable {
     @JoinTable(name = "t_user_role",joinColumns = @JoinColumn(name = "role_id"),inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<Role> roles = new HashSet<>();
 
+    @OneToMany(mappedBy = "user",cascade = CascadeType.REMOVE,fetch=FetchType.EAGER)
+    private transient Set<AccessKey> accessKeys = new HashSet<>();
+
     @Override
     public String toString() {
         return "User{" +
@@ -82,6 +85,14 @@ public class User implements Serializable {
         this.username = username;
         this.password = password;
         this.nickname = nickname;
+    }
+
+    public Set<AccessKey> getAccessKeys() {
+        return accessKeys;
+    }
+
+    public void setAccessKeys(Set<AccessKey> accessKeys) {
+        this.accessKeys = accessKeys;
     }
 
     public String getEmail() {

@@ -13,29 +13,26 @@ import redis.clients.jedis.JedisPoolConfig;
 public class RedisConfig {
     @Bean
     @ConfigurationProperties(prefix = "redis.pool")
-    public JedisPoolConfig jedisPoolConfig()
-    {
+    public JedisPoolConfig jedisPoolConfig() {
         JedisPoolConfig config = new JedisPoolConfig();
         return config;
     }
 
     @Bean
-    public JedisConnectionFactory jedisConnectionFactory(JedisPoolConfig config)
-    {
+    public JedisConnectionFactory jedisConnectionFactory(JedisPoolConfig config) {
         JedisConnectionFactory factory = new JedisConnectionFactory();
         factory.setPoolConfig(config);
 
-        factory.setHostName("172.23.27.202");
+        factory.setHostName("47.106.211.72");
         factory.setTimeout(5000);
         factory.setDatabase(2);
-        factory.setPassword("aa123456");
+        factory.setPassword("ts145623");
         factory.setPort(6379);
         return factory;
     }
 
     @Bean
-    public RedisTemplate<String,Object> redisTemplate(JedisConnectionFactory jedisConnectionFactory)
-    {
+    public RedisTemplate<String,Object> redisTemplate(JedisConnectionFactory jedisConnectionFactory) {
         RedisTemplate<String,Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(jedisConnectionFactory);
         redisTemplate.setKeySerializer(new StringRedisSerializer());

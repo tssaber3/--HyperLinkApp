@@ -32,8 +32,7 @@ public class AjaxLogoutSuccessHandler implements LogoutSuccessHandler {
     public void onLogoutSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException, ServletException {
         String token = httpServletRequest.getHeader("token");
         Map<String,Object> claims = JwtUtil.parseJWT(token);
-        if(claims == null)
-        {
+        if(claims == null) {
             httpServletResponse.getWriter().write(JSON.toJSONString(ApiResponse.ofStatus(ApiResponse.Status.NOT_LOGIN)));
         }
         User user = userService.findUserByUsername((String) claims.get("username"));

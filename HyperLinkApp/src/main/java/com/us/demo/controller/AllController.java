@@ -8,6 +8,7 @@ import com.us.demo.base.ApiResponse;
 import com.us.demo.base.ServiceResult;
 import com.us.demo.entity.User;
 import com.us.demo.service.Impl.UserServiceImpl;
+import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -78,21 +79,17 @@ public class AllController {
         int code = random.nextInt(10000);
         String data = commonRpc.getMessage(username,code + "");
         Message message = gson.fromJson(data,Message.class);
-        if (message.getCode().equals("OK"))
-        {
+        if (message.getCode().equals("OK")) {
             String str = gson.toJson(ApiResponse.ofSuccess(code));
             out.print(str);
-        }else
-        {
+        }else {
             String str = gson.toJson(ApiResponse.ofStatus(ApiResponse.Status.NOT_VALID_PARAM));
             out.print(str);
         }
     }
 
     @RequestMapping("/log")
-    public void log()
-    {
-        Logger logger = LoggerFactory.getLogger(this.getClass());
-        logger.info("sada");
+    public void log() {
+
     }
 }

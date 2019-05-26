@@ -1,5 +1,6 @@
 package com.us.demo.util;
 
+import com.us.demo.entity.AccessKey;
 import com.us.demo.entity.User;
 import com.us.demo.security.JwtUser;
 import io.jsonwebtoken.Claims;
@@ -62,11 +63,10 @@ public class JwtUtil {
 
     /**
      * 生成jwt
-     * @param ttlMinute  过期时间 以分钟做单位
      * @param user  对用户进行jwt生成
      * @return 生成的jwt
      */
-    public static String createJwt(int ttlMinute , User user)
+    public static String createJwt(User user, AccessKey accessKey)
     {
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
         String token = "";
@@ -78,8 +78,8 @@ public class JwtUtil {
         // 创建plyload私有声明
         Map<String, Object> claims = new HashMap<>();
 
-        claims.put("id", user.getId());
-        claims.put("username", user.getUsername());
+        claims.put("user_id", user.getId());
+        claims.put("api_id", accessKey.getApi());
         claims.put("public_key", PUBLIC_KEY);
 
         //创建签发人
@@ -91,14 +91,14 @@ public class JwtUtil {
                 .setIssuedAt(now)
                 .setSubject(subject)
                 .signWith(signatureAlgorithm, SECRET_KEY);
-        //加时间是以分钟作为单位
-        if(ttlMinute > 0)
-        {
-            nowtime.add(Calendar.MINUTE,ttlMinute);
-            Date exp = nowtime.getTime();
-            // 设置过期时间
-            builder.setExpiration(exp);
-        }
+//        //加时间是以分钟作为单位
+//        if(ttlMinute > 0)
+//        {
+//            nowtime.add(Calendar.DATE,ttlMinute);
+//            Date exp = nowtime.getTime();
+//            // 设置过期时间
+//            builder.setExpiration(exp);
+//        }
         return builder.compact();
     }
     /**

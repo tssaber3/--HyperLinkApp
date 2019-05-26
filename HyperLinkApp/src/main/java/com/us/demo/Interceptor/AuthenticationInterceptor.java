@@ -39,8 +39,6 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-
-
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.setContentType("text/xml;charset=UTF-8");
         response.setHeader("Cache-Control", "no-cache");
@@ -51,52 +49,44 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 
 
         String token = request.getHeader("token");
+        System.out.println(token);
         logger.info("进入拦截器");
-        if(!(handler instanceof HandlerMethod))
-        {
+        if(!(handler instanceof HandlerMethod)) {
             return true;
         }
         HandlerMethod handlerMethod = (HandlerMethod) handler;
         Method method = handlerMethod.getMethod();
 
 
-        if(method.isAnnotationPresent(PassToken.class))
-        {
+        if(method.isAnnotationPresent(PassToken.class)) {
             logger.info("有pass注解 直接放行");
             PassToken passToken = method.getAnnotation(PassToken.class);
-            if(passToken.required())
-            {
+            if(passToken.required()) {
                 return true;
             }
         }
 
-        if(method.isAnnotationPresent(UserLoginToken.class))
-        {
+        if(method.isAnnotationPresent(UserLoginToken.class)) {
             logger.info("有UserLoginToken注解需要验证\"");
             UserLoginToken userLoginToken = method.getAnnotation(UserLoginToken.class);
-            if(userLoginToken.required())
-            {
-                if(token == null)
-                {
+            if(userLoginToken.required()) {
+                if(token == null) {
                     throw new RuntimeException("无token请重新登录");
                 }
                 Map<String,Object>claims = new HashMap<>();
                 try {
                     claims = JwtUtil.parseJWT(token);
-                }catch (Exception e)
-                {
+                }catch (Exception e) {
                     throw new RuntimeException("401");
                 }
                 String username = (String) claims.get("username");
                 User user = userRepository.findByUsername(username);
-                if(user == null)
-                {
+                if(user == null) {
                     throw new RuntimeException("用户不存在 请重新登录");
                 }
                 try {
                     JwtUtil.isVerify(token);
-                }catch (Exception e)
-                {
+                }catch (Exception e) {
                     throw new RuntimeException("401 token已过期");
                 }
                 //调用这个方法刷新一次token
@@ -105,8 +95,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
                 logger.info("去redis中拿 token " + username);
 //                redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<User>(User.class));
                 String redistoken = (String) redisTemplate.opsForValue().get(username);
-                if(userDetails != null && SecurityContextHolder.getContext().getAuthentication() == null && redistoken != null)
-                {
+                if(userDetails != null && SecurityContextHolder.getContext().getAuthentication() == null && redistoken != null) {
                     UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities());
                     authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);
@@ -116,7 +105,6 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 
             }
         }
-
         logger.info("离开拦截器");
         return true;
     }

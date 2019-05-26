@@ -8,10 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-
-//整合filter方式一
-@WebFilter("/token/*")
-public class FirstFilter implements Filter {
+@WebFilter("/user/*")
+public class UserFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -19,7 +17,7 @@ public class FirstFilter implements Filter {
     }
 
     @Override
-    public void doFilter(ServletRequest arg0, ServletResponse arg1, FilterChain arg2)throws IOException, ServletException {
+    public void doFilter(ServletRequest arg0, ServletResponse arg1, FilterChain arg2) throws IOException, ServletException {
         System.out.println("Asdasd");
         HttpServletResponse response = (HttpServletResponse) arg1;
         HttpServletRequest request = (HttpServletRequest) arg0;
